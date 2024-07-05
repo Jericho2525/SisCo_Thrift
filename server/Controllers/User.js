@@ -125,28 +125,28 @@ export const addToCart = asyncHandler(async (req, res) => {
     const productId = req.body.productId;
     const quantity = req.body.quantity || 1; 
 
-    // Check if the product exists
+    
     const product = await ProductModel.findById(productId);
     if (!product) {
       return res.status(404).send("Product not found");
     }
 
-    // Check if the product is already in the cart
-    let cart = await CartModel.findOne({ user: req.user._id }); // Assuming user is authenticated
+
+    let cart = await CartModel.findOne({ user: req.user._id }); 
     if (!cart) {
-      // If cart doesn't exist, create a new one
+
       cart = new CartModel({
         user: req.user._id,
         products: [{ product: productId, quantity: quantity }]
       });
     } else {
-      // If cart exists, check if the product is already there
+
       const index = cart.products.findIndex(item => item.product.toString() === productId);
       if (index !== -1) {
-        // If product exists, update its quantity
+      
         cart.products[index].quantity += quantity;
       } else {
-        // If product doesn't exist, add it to the cart
+
         cart.products.push({ product: productId, quantity: quantity });
       }
     }
